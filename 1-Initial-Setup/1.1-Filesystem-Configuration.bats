@@ -3,7 +3,7 @@
 @test "1.1.1.1 Ensure mounting of cramfs filesystems is disabled (Scored)" {
     run bash -c "modprobe -n -v cramfs | grep -v mtd"
     [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true" ]
+    [ "$output" = "install /bin/true " ]
     run bash -c "lsmod | grep cramfs"
     [ "$status" -eq 1 ]
     [ "$output" = "" ]
@@ -12,7 +12,7 @@
 @test "1.1.1.2 Ensure mounting of freevxfs filesystems is disabled (Scored)" {
     run bash -c "modprobe -n -v freevxfs"
     [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true" ]
+    [ "$output" = "install /bin/true " ]
     run bash -c "lsmod | grep freevxfs"
     [ "$status" -eq 1 ]
     [ "$output" = "" ]
@@ -21,7 +21,7 @@
 @test "1.1.1.3 Ensure mounting of jffs2 filesystems is disabled (Scored)" {
     run bash -c "modprobe -n -v jffs2 | grep -v mtd"
     [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true" ]
+    [ "$output" = "install /bin/true " ]
     run bash -c "lsmod | grep jffs2"
     [ "$status" -eq 1 ]
     [ "$output" = "" ]
@@ -30,7 +30,7 @@
 @test "1.1.1.4 Ensure mounting of hfs filesystems is disabled (Scored)" {
     run bash -c "modprobe -n -v hfs"
     [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true" ]
+    [ "$output" = "install /bin/true " ]
     run bash -c "lsmod | grep hfs"
     [ "$status" -eq 1 ]
     [ "$output" = "" ]
@@ -39,7 +39,7 @@
 @test "1.1.1.5 Ensure mounting of hfsplus filesystems is disabled (Scored)" {
     run bash -c "modprobe -n -v hfsplus"
     [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true" ]
+    [ "$output" = "install /bin/true " ]
     run bash -c "lsmod | grep hfsplus"
     [ "$status" -eq 1 ]
     [ "$output" = "" ]
@@ -48,7 +48,7 @@
 @test "1.1.1.6 Ensure mounting of squashfs filesystems is disabled (Scored)" {
     run bash -c "modprobe --showconfig | grep squashfs"
     [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true" ]
+    [ "$output" = "install squashfs /bin/true" ]
     run bash -c "lsmod | grep squashfs"
     [ "$status" -eq 1 ]
     [ "$output" = "" ]
@@ -57,7 +57,7 @@
 @test "1.1.1.7 Ensure mounting of udf filesystems is disabled (Scored)" {
     run bash -c "modprobe -n -v udf | grep -v crc-itu-t"
     [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true" ]
+    [ "$output" = "install /bin/true " ]
     run bash -c "lsmod | grep udf"
     [ "$status" -eq 1 ]
     [ "$output" = "" ]
@@ -65,13 +65,16 @@
 
 @test "1.1.1.8 Ensure mounting of FAT filesystems is limited (Not Scored)" {
     if [ ! -d /sys/firmware/efi ]; then
-        echo '# UEFI is not utilized' >&3
+        echo '# Info: UEFI is not utilized on this machine' >&3
         run bash -c "modprobe --showconfig | grep vfat"
         [ "$status" -eq 0 ]
         [ "$output" = "install vfat /bin/true" ]
         run bash -c "lsmod | grep vfat"
         [ "$status" -eq 1 ]
         [ "$output" = "" ]
+    else
+        echo '# Info: UEFI is utilized on this machine' >&3
+        skip "This audit has to be done manually"
     fi
 }
 
@@ -203,7 +206,7 @@
 @test "1.1.23 Disable USB Storage (Scored)" {
     run bash -c "modprobe -n -v usb-storage"
     [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true" ]
+    [ "$output" = "install /bin/true " ]
     run bash -c "lsmod | grep usb-storage"
     [ "$status" -eq 1 ]
     [ "$output" = "" ]
