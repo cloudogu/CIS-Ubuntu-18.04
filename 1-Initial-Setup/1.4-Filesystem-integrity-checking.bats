@@ -6,13 +6,39 @@
 }
 
 @test "1.4.2 Ensure filesystem integrity is regularly checked (Scored)" {
-    local check_enabled=$(systemctl is-enabled aidecheck.service)
-    local check_status=$(systemctl status aidecheck.service)
-    local timer_enabled=$(systemctl is-enabled aidecheck.timer)
-    local timer_status=$(systemctl status aidecheck.timer)
+    local check_enabled
+    local check_status
 
-    local aide_in_root_cron=$(crontab -u root -l | grep aide)
-    local aide_in_any_cron=$(grep -r aide /etc/cron.* /etc/crontab)
+    if systemctl is-enabled aidecheck.service; then
+        check_enabled=$(systemctl is-enabled aidecheck.service)
+        check_status=$(systemctl status aidecheck.service)
+    else
+        check_enabled=false
+        check_status=false
+    fi
 
-    echo "$check_enabled dings"
+    local timer_enabled
+    local timer_status
+    if systemctl is-enabled aidecheck.timer; then
+        timer_enabled=$(systemctl is-enabled aidecheck.timer)
+        timer_status=$(systemctl status aidecheck.timer)
+    else
+        timer_enabled=false
+        timer_status=false
+    fi;
+
+    local aide_in_root_cron
+    if crontab -u root -l; then
+        aide_in_root_cron=$(crontab -u root -l | grep aide)
+    else
+        aide_in_root_cron=false
+    fi;
+
+    local aide_in_any_cron
+    aide_in_any_cron=$(grep -r aide /etc/cron.* /etc/crontab)
+
+    [ "$check_enabled" != false ] && [ "$check_status" != false ] &&
+     [ "$timer_enabled" != false ] && [ "$timer_status" != false ] \
+      || [ "$aide_in_root_cron" ] \
+      || [ "$aide_in_any_cron" ]
 }
