@@ -16,8 +16,7 @@
     [ "$status" -eq 1 ]
 }
 
-@test "
-" {
+@test "1.6.4 Ensure core dumps are restricted (Scored)" {
     local subfile_is_hard_core
     local limitsconf_is_hard_core
 
