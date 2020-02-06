@@ -118,56 +118,73 @@
     [[ "$output" == *"Chain OUTPUT (policy DROP)"* || "$output" == *"Chain OUTPUT (policy REJECT)"* ]]
 }
 
-@test "" {
-    run bash -c ""
+@test "3.5.4.1.2 Ensure loopback traffic is configured (Scored)" {
+    run bash -c "iptables -L INPUT -v -n"
     [ "$status" -eq 0 ]
-    [ "$output" = "" ]
+    [[ "$output" = *"ACCEPT"*"all"*"--"*"lo"*"*"*"0.0.0.0/0"*"0.0.0.0/0"* ]]
+    [[ "$output" = *"DROP"*"all"*"--"*"*"*"*"*"127.0.0.0/8"*"0.0.0.0/0"* ]]
+    run bash -c "iptables -L OUTPUT -v -n"
+    [ "$status" -eq 0 ]
+    [[ "$output" = *"ACCEPT"*"all"*"--"*"*"*"lo"*"0.0.0.0/0"*"0.0.0.0/0"* ]]
 }
 
-@test "" {
-    run bash -c ""
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
+@test "3.5.4.1.3 Ensure outbound and established connections are configured (Not Scored)" {
+    skip "This audit has to be done manually"
 }
 
-@test "" {
-    run bash -c ""
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
+@test "3.5.4.1.4 Ensure firewall rules exist for all open ports (Scored)" {
+    skip "This audit has to be done manually"
 }
 
-@test "" {
-    run bash -c ""
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
+@test "3.5.4.2.1 Ensure IPv6 default deny firewall policy (Scored)" {
+    run bash -c "ip6tables -L"
+    if [ "$status" -eq 0 ]; then
+        [[ "$output" == *"Chain INPUT (policy DROP)"* || "$output" == *"Chain INPUT (policy REJECT)"* ]]
+        [[ "$output" == *"Chain FORWARD (policy DROP)"* || "$output" == *"Chain FORWARD (policy REJECT)"* ]]
+        [[ "$output" == *"Chain OUTPUT (policy DROP)"* || "$output" == *"Chain OUTPUT (policy REJECT)"* ]]
+    else
+        run bash -c "grep \"^\s*linux\" /boot/grub2/grub.cfg | grep -v ipv6.disable=1"
+        if [ "$status" -eq 0 ]; then
+            run bash -c "grep \"^\s*linux\" /boot/grub/grub.cfg | grep -v ipv6.disable=1"
+            [ "$status" -ne 0 ]
+        fi
+    fi
 }
 
-@test "" {
-    run bash -c ""
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
+@test "3.5.4.2.2 Ensure IPv6 loopback traffic is configured (Scored)" {
+    run bash -c "ip6tables -L INPUT -v -n"
+    if [ "$status" -eq 0 ]; then
+        [[ "$output" = *"ACCEPT"*"all"*"lo"*"*"*"::/0"*"::/0"* ]]
+        [[ "$output" = *"DROP"*"all"*"*"*"*"*"::1"*"::/0"* ]]
+        run bash -c "ip6tables -L OUTPUT -v -n"
+        [ "$status" -eq 0 ]
+        [[ "$output" = *"ACCEPT"*"all"*"*"*"lo"*"::/0"*"::/0"* ]]
+    else
+        run bash -c "grep \"^\s*linux\" /boot/grub2/grub.cfg | grep -v ipv6.disable=1"
+        if [ "$status" -eq 0 ]; then
+            run bash -c "grep \"^\s*linux\" /boot/grub/grub.cfg | grep -v ipv6.disable=1"
+            [ "$status" -ne 0 ]
+        fi
+    fi
 }
 
-@test "" {
-    run bash -c ""
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
+@test "3.5.4.2.3 Ensure IPv6 outbound and established connections are configured (Not Scored)" {
+    skip "This audit has to be done manually"
 }
 
-@test "" {
-    run bash -c ""
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
+@test "3.5.4.2.4 Ensure IPv6 firewall rules exist for all open ports (Not Scored)" {
+    skip "This audit has to be done manually"
 }
 
-@test "" {
-    run bash -c ""
-    [ "$status" -eq 0 ]
-    [ "$output" = "" ]
+@test "3.6 Ensure wireless interfaces are disabled (Scored)" {
+    run bash -c "nmcli radio all"
+    if [ "$status" -eq 0 ]; then
+        skip "This audit has to be done manually"
+    fi
 }
 
-@test "" {
-    run bash -c ""
-    [ "$status" -eq 0 ]
+@test "3.7 Disable IPv6 (Not Scored)" {
+    run bash -c "grep \"^\s*linux\" /boot/grub/grub.cfg | grep -v \"ipv6.disable=1\""
+    [ "$status" -ne 0 ]
     [ "$output" = "" ]
 }
