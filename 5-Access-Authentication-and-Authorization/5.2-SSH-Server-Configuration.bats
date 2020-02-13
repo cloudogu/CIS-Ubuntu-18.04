@@ -45,7 +45,7 @@
 @test "5.2.7 Ensure SSH MaxAuthTries is set to 4 or less (Scored)" {
     run bash -c "sshd -T | grep maxauthtries"
     [ "$status" -eq 0 ]
-    [[ "$output" == "maxauthtries 4" ]]
+    [[ "$output" == "maxauthtries "[1-4] ]]
 }
 
 @test "5.2.8 Ensure SSH IgnoreRhosts is enabled (Scored)" {
