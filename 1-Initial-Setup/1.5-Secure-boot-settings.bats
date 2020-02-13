@@ -6,18 +6,13 @@
 }
 
 @test "1.5.2 Ensure bootloader password is set (Scored)" {
-    local superusers
-    superusers=$(grep '^set superusers' /boot/grub/grub.cfg)
-
-    local password
-    password=$(grep "^password" /boot/grub/grub.cfg)
-
-    [ "$superusers" ] && [ "$password" ]
+    (grep '^set superusers' /boot/grub/grub.cfg)
+    (grep "^password" /boot/grub/grub.cfg)
 }
 
 @test "1.5.3 Ensure authentication required for single user mode (Scored)" {
     run bash -c "grep ^root:[*\!]: /etc/shadow"
-    [ "$status" != 0 ]
+    [ "$status" -ne 0 ]
 }
 
 @test "1.5.4 Ensure interactive boot is not enabled (Not Scored)" {
