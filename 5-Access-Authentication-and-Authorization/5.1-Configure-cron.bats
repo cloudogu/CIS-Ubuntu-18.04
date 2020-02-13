@@ -63,10 +63,10 @@
     [ "$status" -eq 0 ]
     [[ "$output" = *"Uid:"*"("*"0/"*"root"* ]]
     [[ "$output" = *"Gid:"*"("*"0/"*"root"* ]]
-    [[ "$output" = *"Access:"*"(0"[0-7][0\|4]"0"* ]]
+    [[ "$output" = *"Access:"*"(0"[0-7][04]"0"* ]]
     run bash -c "stat /etc/at.allow"
     [ "$status" -eq 0 ]
     [[ "$output" = *"Uid:"*"("*"0/"*"root"* ]]
     [[ "$output" = *"Gid:"*"("*"0/"*"root"* ]]
-    [[ "$output" = *"Access:"*"(0"[0-7][0\|4]"0"* ]]
+    [[ "$output" = *"Access:"*"(0"[0-7][04]"0"* ]]
 }
