@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2020-02-24
+### Fixed
+- Fix CIS benchmark pdf name
+
 ## [1.0.0] - 2020-02-24
 ### Added
 - Add all CIS Ubuntu Linux 18.04 Benchmark v2.0.1 tests and pdf document
