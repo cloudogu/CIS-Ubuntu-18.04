@@ -15,7 +15,9 @@
     [ "$status" -eq 0 ]
     [[ "$output" == *"deny (incoming)"* || "$output" == *"reject (incoming)"* ]]
     [[ "$output" == *"deny (outgoing)"* || "$output" == *"reject (outgoing)"* ]]
-    [[ "$output" == *"deny (routed)"* || "$output" == *"reject (routed)"* ]]
+    [[ "$output" == *"deny (routed)"* \
+     || "$output" == *"reject (routed)"* \
+     || "$output" == *"disabled (routed)"* ]]
 }
 
 @test "3.5.2.3 Ensure loopback traffic is configured (Scored)" {

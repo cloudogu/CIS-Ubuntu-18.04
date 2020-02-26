@@ -82,9 +82,9 @@
     run bash -c "mount | grep -E '\s/tmp\s'"
     [ "$status" -eq 0 ]
     [[ "$output" = *" on /tmp "* ]]
-    run bash -c "systemctl is-enabled tmp.mount"
-    [ "$status" -eq 0 ]
-    [ "$output" = "enabled" ]
+    local FSTAB=$(grep -E '\s/tmp\s' /etc/fstab | grep -E -v '^\s*#')
+    local TMPMOUNT=$(systemctl is-enabled tmp.mount)
+    [[ "$FSTAB" != "" ]] || [ "$TMPMOUNT" = "enabled" ]
 }
 
 
