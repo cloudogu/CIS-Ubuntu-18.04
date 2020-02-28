@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2020-02-28
+### Fixed
+- add missing file content validation to testcase 1.6.4
+
 ## [1.0.2] - 2020-02-26
 ### Fixed
 - Fix test 1.1.2 so it does not fail anymore when the alternative option is fullfilled

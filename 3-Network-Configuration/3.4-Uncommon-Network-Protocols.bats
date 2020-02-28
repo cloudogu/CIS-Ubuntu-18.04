@@ -28,9 +28,7 @@
 }
 
 @test "3.4.4 Ensure TIPC is disabled (Scored)" {
-    run bash -c "modprobe -n -v tipc"
-    [ "$status" -eq 0 ]
-    [ "$output" = "install /bin/true " ]
+    (modprobe -n -v tipc | grep "install /bin/true")
     run bash -c "lsmod | grep tipc"
     [ "$status" -ne 0 ]
     [ "$output" = "" ]
