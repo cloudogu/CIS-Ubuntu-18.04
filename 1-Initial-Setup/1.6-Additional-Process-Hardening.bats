@@ -17,24 +17,14 @@
 }
 
 @test "1.6.4 Ensure core dumps are restricted (Scored)" {
-    local limitsconf_is_hard_core
-
     run bash -c "grep 'hard core' /etc/security/limits.conf /etc/security/limits.d/*"
     [[ "$output" == *"* hard core 0" ]]
-    limitsconf_is_hard_core=$?
-
-    [[ "$limitsconf_is_hard_core" == "0" ]]
 
     run bash -c "sysctl fs.suid_dumpable"
     [ "$output" == "fs.suid_dumpable = 0" ]
 
-    local sysctlconf_is_dumpable
-
     run bash -c "grep \"fs\.suid_dumpable\" /etc/sysctl.conf /etc/sysctl.d/*"
     [[ "$output" == *"fs.suid_dumpable = 0" ]]
-    sysctlconf_is_dumpable=$?
-
-    [[ "$sysctlconf_is_dumpable" == "0" ]]
 
     run bash -c "systemctl is-enabled coredump.service"
     [ "$status" -eq 1 ]
