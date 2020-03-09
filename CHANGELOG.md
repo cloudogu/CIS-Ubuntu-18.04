@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2020-03-09
+### Fixed
+- fix path validation for test case 4.1.15 so it ignores the surrounding quote marks
+
 ## [1.0.3] - 2020-02-28
 ### Fixed
 - add missing file content validation to testcase 1.6.4

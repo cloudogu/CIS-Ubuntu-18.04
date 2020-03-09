@@ -208,14 +208,25 @@
 }
 
 @test "4.1.15 Ensure system administrator actions (sudolog) are collected (Scored)" {
-    local COMPARE_COMMAND=$(echo "-w $(grep -r logfile /etc/sudoers* | sed -e 's/.*logfile=//;s/,? .*//') -p wa -k actions")
-    [[ "$COMPARE_COMMAND" == *"-w /"*"/"*" -p wa -k actions" ]]
-    run bash -c "grep -E \"^\s*-w\s+$(grep -r logfile /etc/sudoers* | sed -e 's/.*logfile=//;s/,? .*//')\s+-p\s+wa\s+-k\s+actions\" /etc/audit/rules.d/*.rules"
-    [ "$status" -eq 0 ]
-    [[ "$output" == "$COMPARE_COMMAND" ]]
+    # grep -> take line with logfile entry
+    # sed1 -> filter path
+    # sed2 -> remove quotes from file path
+    local COMPOUND_CONFIG_VALUE=$(echo "-w $(grep -r logfile /etc/sudoers* | sed -e 's/.*logfile=//;s/,? .*//' | sed -re 's/"(.*)"/\1/') -p wa -k actions")
+
+    # regex to validate that the string contains a path after the '-w' flag with or without surrounding quotes
+    local VALIDATION_REGEX='^-w\s+"?\/([A-z0-9-_+]+\/)*([A-z0-9-_+]+\.([A-z0-9]+))"?\s+-p\s+wa\s+-k\s+actions$'
+
+    # check for valid log file configured in /etc/sudoers
+    [[ $(grep -oP $VALIDATION_REGEX <<< $COMPOUND_CONFIG_VALUE) ]]
+
+    # rules file for audit service has to contain previously found log file
+    local RULES_REGEX="^\s*$COMPOUND_CONFIG_VALUE$"
+    [[ $(grep -oP "$RULES_REGEX" /etc/audit/rules.d/*.rules) ]]
+
+    # log file setting has to be successfully configured for
     run bash -c "auditctl -l | grep actions"
     [ "$status" -eq 0 ]
-    [[ "$output" == "$COMPARE_COMMAND" ]]
+    [[ "$output" == "$COMPOUND_CONFIG_VALUE" ]]
 }
 
 @test "4.1.16 Ensure kernel module loading and unloading is collected (Scored)" {
