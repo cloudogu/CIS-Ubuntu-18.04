@@ -221,7 +221,7 @@
 
     # rules file for audit service has to contain previously found log file
     local RULES_REGEX="^\s*$COMPOUND_CONFIG_VALUE$"
-    [[ $(grep -oP "$RULES_REGEX" /etc/audit/rules.d/*rules) ]]
+    [[ $(grep -oP "$RULES_REGEX" /etc/audit/rules.d/*.rules) ]]
 
     # log file setting has to be successfully configured for
     run bash -c "auditctl -l | grep actions"
