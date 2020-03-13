@@ -106,12 +106,10 @@
 }
 
 @test "5.6 Ensure access to the su command is restricted (Scored)" {
-    run bash -c "grep pam_wheel.so /etc/pam.d/su"
+    run bash -c "grep \"auth required pam_wheel.so use_uid group=\" /etc/pam.d/su"
     [ "$status" -eq 0 ]
     [[ "$output" == "auth required pam_wheel.so use_uid group="* ]]
-    local GROUP=$(grep pam_wheel.so /etc/pam.d/su)
-    [[ "$GROUP" != "" ]]
-    GROUP=(${GROUP//auth required pam_wheel.so use_uid group=/ }) # get the group name from the string
+    local GROUP=(${output//auth required pam_wheel.so use_uid group=/ }) # get the group name from the string
     [[ "$GROUP" != "" ]]
     run bash -c "grep $GROUP /etc/group"
     [ "$status" -eq 0 ]
