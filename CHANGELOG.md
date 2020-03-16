@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- add missing whitespace to test case 5.4.1.5
+
 ## [1.0.5] - 2020-03-13
 ### Fixed
 - Fixed group name parsing in test 5.6
